@@ -1,0 +1,15 @@
+{
+    "name": "yilma/phpmvc-framework",
+    "autoload": {
+        "psr-4": {
+            "app\\": "./"
+        }
+    },
+    "authors": [
+        {
+            "name": "Yilmaz kadan",
+            "email": "kadan8080@gmail.com"
+        }
+    ],
+    "require": {}
+}
