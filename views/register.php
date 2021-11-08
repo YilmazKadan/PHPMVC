@@ -1,27 +1,11 @@
-<?php
-?>
-    <h2>Giriş</h2>
-    <form action="#" method="post">
-        <div class="form-group mb-3">
-            <label>Kullanıcı Adı</label>
-            <input type="text" name="ad" class="form-control">
-        </div>
-        <div class="form-group mb-3">
-            <label>Soyad</label>
-            <input type="text" name="soyad" class="form-control">
-        </div>
-        <div class="form-group mb-3">
-            <label>Email</label>
-            <input type="email" name="email" class="form-control">
-        </div>
-        <div class="form-group mb-3">
-            <label>Şifre</label>
-            <input type="password" name="sifre" class="form-control"></input>
-        </div>
-        <div class="form-group mb-3">
-            <label>Şifre</label>
-            <input type="password" name="sifreTekrar" class="form-control"></input>
-        </div>
+<h2>Hesap oluştur</h2>
+<?php $form =  \app\core\form\Form::begin("", "post"); ?>
 
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+<?php echo $form->field($model, 'firstname') ?>
+<?php echo $form->field($model, 'lastname') ?>
+<?php echo $form->field($model, 'email') ?>
+<?php echo $form->field($model, 'password')->passwordField() ?>
+<?php echo $form->field($model, 'confirmPassword')->passwordField() ?>
+
+<button type="submit" class="btn btn-primary">Submit</button>
+<?php \app\core\form\Form::end(); ?>
