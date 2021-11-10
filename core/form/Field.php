@@ -11,7 +11,6 @@ class Field
     public const TYPE_TEXT = 'text';
     public const TYPE_PASSWORD = 'password';
     public const TYPE_NUMBER = 'number';
-
     public Model $model;
     public string $attribute;
     public string $type;
