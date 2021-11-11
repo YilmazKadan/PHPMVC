@@ -47,7 +47,14 @@ use app\core\Application;
         </div>
     </nav>
 
-    <div class="container">{{content}}</div>
+    <div class="container">
+        <?php if (Application::$app->session->getFlash('success')) : ?>
+            <div class="alert alert-success">
+                <?php echo Application::$app->session->getFlash('success'); ?>
+            </div>
+        <?php endif; ?>
+        {{content}}
+    </div>
 
     <!-- Optional JavaScript; choose one of the two! -->
 

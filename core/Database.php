@@ -20,6 +20,7 @@ class Database
 
         $this->pdo = new \PDO($dsn, $user, $password);
         $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $this->pdo->query("SET NAMES UTF8");
     }
 
     public function applyMigration()
@@ -85,6 +86,11 @@ class Database
         $statment->execute();
     }
 
+    public function prepare($sql)
+    {
+        return $this->pdo->prepare($sql);
+    }
+    
     protected  function log($message)
     {
         echo '[' . date("Y-m-d H:i:s") . '] - ' . $message . PHP_EOL;

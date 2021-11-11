@@ -9,6 +9,7 @@ abstract class Model
     public const RULE_MIN = 'min';
     public const RULE_MAX = 'max';
     public const RULE_MATCH = 'match';
+    public const RULE_UNIQUE = 'unique';
 
     // Bu  metot controllerden gelen post datalarını sınıftaki propertylere atar .
     public function loadData($data)
@@ -52,8 +53,21 @@ abstract class Model
                 if ($ruleName === self::RULE_MAX && strlen($value) > $rule['max']) {
                     $this->addError($attribute, self::RULE_MAX, $rule);
                 }
-                if($ruleName == self::RULE_MATCH && $value !== $this->{$rule['match']}){
+                if ($ruleName == self::RULE_MATCH && $value !== $this->{$rule['match']}) {
+                    $rule['match'] = $this->getLabel($rule['match']);
                     $this->addError($attribute, self::RULE_MATCH, $rule);
+                }
+                if ($ruleName === self::RULE_UNIQUE) {
+                    $className = $rule['class'];
+                    $uniqueAttribute = $rule['attribute'] ?? $attribute;
+                    $tableName = $className::tableName();
+                    $statement =   Application::$app->db->prepare("SELECT * FROM $tableName WHERE $uniqueAttribute = :attr");
+                    $statement->bindValue(":attr", $value);
+                    $statement->execute();
+                    $record = $statement->fetchObject();
+                    if ($record) {
+                        $this->addError($attribute, self::RULE_UNIQUE, ['field' => $this->getLabel($attribute)]);
+                    }
                 }
             }
         }
@@ -79,17 +93,39 @@ abstract class Model
             self::RULE_EMAIL => 'Girdiğiniz email adresi geçerli değildir',
             self::RULE_MIN => "Minumum {min} karakter girilmeli",
             self::RULE_MAX => "Maksimum {max} karakter girilmeli",
-            self::RULE_MATCH => 'Bu alan {match} alanı ile eşleşmelidir '
+            self::RULE_MATCH => 'Bu alan {match} alanı ile eşleşmelidir ',
+            self::RULE_UNIQUE => 'Girmiş olduğunuz {field} halihazırda veritabanında var . '
         ];
     }
 
 
-    public function hasError($attribute){
+    public function hasError($attribute)
+    {
 
         return $this->errors[$attribute] ?? false;
     }
 
-    public function getFirstError($attribute){
+    public function getFirstError($attribute)
+    {
         return $this->errors[$attribute][0] ?? false;
+    }
+    /**
+     * Bu metot paramatre olarak aldığı attribute ile ilgili label değerini döndürür .
+     *
+     * @param [string] $attribute
+     * @return void
+     */
+    public function getLabel($attribute)
+    {
+        return $this->labels()[$attribute] ?? $attribute;
+    }
+    /**
+     * Bu metot form field sınıfının labelleri ne isimle yazdıracağını belirttiğimiz metot
+     *
+     * @return array
+     */
+    public function labels(): array
+    {
+        return [];
     }
 }
