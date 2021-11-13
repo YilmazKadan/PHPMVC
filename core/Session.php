@@ -35,14 +35,29 @@ class Session
     }
 
 
-    public function __destruct(){
+    public function __destruct()
+    {
         $flashMessages = $_SESSION[self::FLASH_KEY] ?? [];
         // '&' işareti sayesinde direkt diziye etki ediyoruz .
         foreach ($flashMessages as $key => &$flashMessage) {
-            if($flashMessage['remove']){
+            if ($flashMessage['remove']) {
                 unset($flashMessages[$key]);
             }
         }
         $_SESSION[self::FLASH_KEY] = $flashMessages;
+    }
+
+    public function set($key, $value)
+    {
+        $_SESSION[$key] = $value;
+    }
+
+    public function get($key)
+    {
+        return $_SESSION[$key] ?? false;
+    }
+    public function remove($key)
+    {
+        unset($_SESSION[$key]);
     }
 }

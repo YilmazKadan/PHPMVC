@@ -1,7 +1,6 @@
 <?php
 
 use app\core\Application;
-
 ?>
 
 
@@ -16,7 +15,7 @@ use app\core\Application;
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
-    <title>Hello, world!</title>
+    <title>Php MVC Framework</title>
 </head>
 
 <body>
@@ -24,25 +23,33 @@ use app\core\Application;
 
     <nav class="navbar navbar-expand-lg navbar-primary bg-gray">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Navbar</a>
+            <a class="navbar-brand" href="#">PHP MVC</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <?php if (Application::isGuest()) : ?>
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/contact">İletişim</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/login">Giriş</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/register">Kayıt</a>
+                        </li>
+                    </ul>
+            <?php else : ?>
+                <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/">Anasayfa</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/contact">İletişim</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/login">Giriş</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/register">Kayıt</a>
+                        <a class="nav-link active" aria-current="page" href="/logout">Hoşgeldiniz <?php echo Application::$app->user->getDisplayname()?> Çıkış</a>
                     </li>
                 </ul>
+            <?php endif; ?>
             </div>
         </div>
     </nav>

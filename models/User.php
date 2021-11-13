@@ -3,10 +3,9 @@
 
 namespace app\models;
 
-use app\core\DbModel;
-use app\core\Model;
+use app\core\UserModel;
 
-class User extends DbModel
+class User extends UserModel
 {
     const STATUS_INACTIVE = 0;
     const STATUS_ACTIVE = 1;
@@ -20,14 +19,18 @@ class User extends DbModel
     public string $confirmPassword = '';
 
 
-    public function tableName(): string
+    public static function tableName(): string
     {
         return 'users';
     }
-
-    public function save(){
+    /**
+     * @return array
+     * Bu metot override edilmiştir.
+     */
+    public function save()
+    {
         $this->status = self::STATUS_ACTIVE;
-        $this->password = password_hash($this->password,PASSWORD_DEFAULT);
+        $this->password = password_hash($this->password, PASSWORD_DEFAULT);
         return parent::save();
     }
 
@@ -40,12 +43,13 @@ class User extends DbModel
                 self::RULE_UNIQUE, 'class' => self::class
 
             ]],
-            'password' => [self::RULE_REQUIRED, [self::RULE_MIN, 'min' => 8],[self::RULE_MAX, 'max' => 15]],
+            'password' => [self::RULE_REQUIRED, [self::RULE_MIN, 'min' => 8], [self::RULE_MAX, 'max' => 15]],
             'confirmPassword' => [self::RULE_REQUIRED, [self::RULE_MATCH, 'match' => 'password']],
         ];
     }
 
-    public function labels():array {
+    public function labels(): array
+    {
         return [
             'firstname' => 'Adınız',
             'lastname' => 'Soyadınız',
@@ -56,8 +60,19 @@ class User extends DbModel
     }
 
 
-    public function attributes(): array{
+    public function attributes(): array
+    {
 
-        return ['firstname','lastname', 'email','password','status'];
+        return ['firstname', 'lastname', 'email', 'password', 'status'];
+    }
+
+    public static function primaryKey(): string
+    {
+        return 'id';
+    }
+
+    public function getDisplayname():string
+    {
+        return $this->firstname . " " . $this->lastname;
     }
 }

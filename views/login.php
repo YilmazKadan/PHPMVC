@@ -1,15 +1,14 @@
 <?php
-?>
-    <h2>Login</h2>
-    <form action="#" method="post">
-        <div class="form-group mb-3">
-            <label>Email</label>
-            <input type="email" name="email" class="form-control">
-        </div>
-        <div class="form-group mb-3">
-            <label>Şifre</label>
-            <input type="password" name="sifre" class="form-control"></input>
-        </div>
 
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+/**
+ * @var $model \app\models\User
+ */
+?>
+
+<h2>Giriş</h2>
+<?php $form =  \app\core\form\Form::begin("", "post"); ?>
+<?php echo $form->field($model, 'email') ?>
+<?php echo $form->field($model, 'password')->passwordField() ?>
+
+<button type="submit" class="btn btn-primary">Submit</button>
+<?php \app\core\form\Form::end(); ?>
