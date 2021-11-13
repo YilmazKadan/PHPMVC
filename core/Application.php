@@ -36,13 +36,20 @@ class Application
         if ($primaryValue) {
             $primaryKey = $this->userClass::primaryKey();
             $this->user = $this->userClass::findOne([$primaryKey => $primaryValue]);
-        }else{
+        } else {
             $this->user = NULL;
         }
     }
     public function run()
     {
-        echo $this->router->resolve();
+        try {
+            echo $this->router->resolve();
+        } catch (\Exception $e) {
+            $this->response->setStatusCode($e->getCode());
+            echo $this->router->renderView('_error',[
+                "exception" =>  $e
+            ]);
+        }
     }
 
     public function login(DbModel $user)
@@ -64,7 +71,8 @@ class Application
      *
      * @return boolean
      */
-    public static function isGuest(){
+    public static function isGuest()
+    {
         return !self::$app->user;
     }
 }

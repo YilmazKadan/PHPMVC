@@ -2,6 +2,8 @@
 
 namespace app\core;
 
+use app\core\exception\NotFoundException;
+
 class Router
 {
     public Request $request;
@@ -29,17 +31,27 @@ class Router
         $method = $this->request->method();
         $callback = $this->routes[$method][$path] ?? false;
         if ($callback === false) {
-            $this->response->setStatusCode(404);
-            return $this->renderView("_404");
+            throw new NotFoundException();
         }
 
         if (is_string($callback)) {
             return $this->renderView($callback);
         }
         if(is_array($callback)){
-            Application::$app->controller = new $callback[0]();
+            /**
+             * @var \app\core\Controller $controller
+             */
+            $controller = new $callback[0]();
+            Application::$app->controller = $controller;
+            $controller->action = $callback[1];
+            $callback[0] = $controller;
 
-            $callback[0] = Application::$app->controller;
+            /**
+             * Bu kısım gelen controllara ait tüm middlewareleri çalıştırır
+             */
+            foreach ($controller->getMiddleWares() as $middleware){
+                $middleware->execute();
+            }
         }
         return call_user_func($callback,$this->request, $this->response);
     }

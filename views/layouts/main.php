@@ -46,6 +46,9 @@ use app\core\Application;
                         <a class="nav-link active" aria-current="page" href="/">Anasayfa</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/profile">Profile</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/logout">Hoşgeldiniz <?php echo Application::$app->user->getDisplayname()?> Çıkış</a>
                     </li>
                 </ul>
