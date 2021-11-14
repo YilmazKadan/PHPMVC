@@ -26,8 +26,6 @@ class AuthController extends Controller
             $loginForm->loadData($request->getBody());
             if ($loginForm->validate() && $loginForm->login()) {
                 $response->redirect('/');
-                print_r("anan");
-                exit;
                 return;
             }
         }
@@ -36,12 +34,30 @@ class AuthController extends Controller
             "model" => $loginForm
         ]);
     }
-    // Logout method
+    /**
+     * User çıkış metotu
+     * 
+     * Bu metot Application sınıfından logout metodunu çağırır.
+     * Ve çıkış yapıldıktan sonra kullanıcıya yönlendirilir.
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return void
+     */
     public function logout(Request $request ,Response $response){
         Application::$app->logout();
         $response->redirect('/');
     }
-    // Register method
+    /**
+     * Kayıt metotu
+     * 
+     * Post işlemi var ise kayıt işlemleri yok ise kayıt formu gösterilir.
+     * Bu metot User modelinin save metodunu çağırır.
+     * Kayıt işlemi başarılı ise kullanıcıya yönlendirilir. Değil ise kayıt formu ve hatalar gösterilir.
+     *
+     * @param Request $request
+     * @return void
+     */
     public function register(Request $request)
     {
         $this->setLayout('auth');
@@ -63,7 +79,13 @@ class AuthController extends Controller
             'model' => $User
         ]);
     }
-
+    /**
+     * Profil metotu
+     * 
+     * Bu metot profil sayfasını yükler
+     *
+     * @return void
+     */
     public function profile(){
 
         return $this->render('profile');

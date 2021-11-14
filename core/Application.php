@@ -4,20 +4,84 @@ namespace app\core;
 
 use app\models\User;
 
+/**
+ * Apllication sınıfı 
+ * 
+ * Bu sınıf  uygulamanın ana kısmını yönetir.
+ * Diğer tüm sınıflar arasındaki ana bağlantı burasıdır . Tüm işlemler buradan dağılır
+ */
 class Application
 {
+    /**
+     * @var string $ROOT_DIR bu değişken site kök dizininin adresini tutar.
+     */
     public static $ROOT_DIR;
 
+    /**
+     * User sınıfının nesnesini tutar.
+     *
+     * @var string  $userClass
+     */
     public string $userClass;
+    /**
+     * Router sınıfından bir nesne tutar
+     *
+     * @var Router
+     */
     public Router $router;
+    /**
+     * Request sınıfından bir nesne tutar
+     *
+     * @var Request $request sınıfından bir nesne.
+     */
     public Request $request;
+    /**
+     * Database sınıfından bir nesne tutar
+     *
+     * @var Database $db Database sınıfından bir nesne
+     */ 
     public Database $db;
+    /**
+     * Session sınıfından bir nesne tutar
+     *
+     * @var Session $session Session sınıfından bir nesne
+     */
     public Session $session;
+    /**
+     * Response sınıfından bir nesne tutar
+     *
+     * @var Response $response
+     */
     public Response $response;
+    /**
+     * @var Controller $controller aktif olarak çalışılan controller nesnesini tutar .
+     */
     public Controller $controller;
     // '?' property'nin türünün boş olabileceğini belirliyor 
+
+    /**
+     * DbModel sınıfından miras alan bir user nesnesi tutar.
+     *
+     * @var DbModel|null $user aktif olarak oturum açan kullanıcının bilgilerini tutar.
+     */
     public ?DbModel $user;
+    /**
+     * Undocumented variable
+     *
+     * @var Application $app Application sınıfının statik olmayan değişkenlerine 
+     * ve metotlarına erişmek için Application sınıfından bir nesne tutar.
+     */
     public static Application $app;
+
+    /**
+     * Application sınıfı yapıcı metotu
+     * 
+     * Bu metot tüm alt sınıflardan instance'ler oluşturur ve bunların gerekli olanlarına 
+     * parametreler yollar .
+     *
+     * @param [type] $rootPath Bu değişken site kök dizininin adresini tutar.
+     * @param array $config Bu değişken site ayarlarını tutar.
+     */
     public function __construct($rootPath, array $config)
     {
         $this->userClass = $config['userClass'];
@@ -40,6 +104,13 @@ class Application
             $this->user = NULL;
         }
     }
+    /**
+     * Tüm router işlemlerini başlatan ve response hataları yakalayan metot.
+     * 
+     * Bu metot  tüm routing ve response işlemlerini başlatır .
+     *
+     * @return void
+     */
     public function run()
     {
         try {
@@ -51,7 +122,15 @@ class Application
             ]);
         }
     }
-
+    /**
+     * Login işlemini yapar.
+     * 
+     * Bu metot , giriş işlemi başarılı ile gerçekleştikten sonra çalışır ve 
+     * kullanıcının giriş yaptığı nesneyi alıp session'a atar. Ve gerekli bilgileri buradaki property'lere aktarır .
+     * 
+     * @param DbModel $user bu parametre kullanıcının nesnesini tutar.
+     * @return bool true dönerse başarılı bir şekilde giriş yapıldı.
+     */
     public function login(DbModel $user)
     {
         $this->user = $user;
@@ -60,6 +139,13 @@ class Application
         $this->session->set('user', $primaryValue);
         return true;
     }
+    /**
+     * Çıkış metotu
+     * 
+     * Bu metot kullanıcının çıkış yaptığı anda çalışır ve user  session'ını siler.
+     *
+     * @return void
+     */
     public function logout()
     {
         $this->user = null;

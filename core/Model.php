@@ -11,7 +11,12 @@ abstract class Model
     public const RULE_MATCH = 'match';
     public const RULE_UNIQUE = 'unique';
 
-    // Bu  metot controllerden gelen post datalarını sınıftaki propertylere atar .
+    /**
+     * Tüm post verilerini var olan property'lere atar.
+     *
+     * @param [array] $data [Post verileri]
+     * @return void
+     */
     public function loadData($data)
     {
         /*

@@ -4,7 +4,12 @@
 
 namespace app\core;
 
-
+/**
+ * Oturum sınıfı 
+ * 
+ * Oturum sınıfı, oturum işlemlerini yönetmek için kullanılır.
+ * @package app\core
+ */
 class Session
 {
 
@@ -46,16 +51,33 @@ class Session
         }
         $_SESSION[self::FLASH_KEY] = $flashMessages;
     }
-
+    /**
+     * Undocumented function
+     *
+     * @param [type] $key
+     * @param [type] $value
+     * @return void
+     */
     public function set($key, $value)
     {
         $_SESSION[$key] = $value;
     }
-
+    /**
+     * Session değerini döndürür
+     *
+     * @param [string] $key istenen session değerinin adı
+     * @return string | false
+     */
     public function get($key)
     {
         return $_SESSION[$key] ?? false;
     }
+    /**
+     * Session silme işlemi
+     *
+     * @param [string] $key silinecek session anahtarı
+     * @return void
+     */
     public function remove($key)
     {
         unset($_SESSION[$key]);
