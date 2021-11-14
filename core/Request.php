@@ -22,6 +22,13 @@ class Request
     public function isPost(){
         return $this->method() === 'post';
     }
+    /**
+     * Post veya get ile gelen verileri array olarak döndürür.
+     * 
+     * Bu metot post veya get verilerini filter_input fonksiyonu ile 
+     * zararlı olanları bulup  temizler.
+     * @return array
+     */
     public function getBody(){
         $body = [];
         if ($this->method() === 'get'){

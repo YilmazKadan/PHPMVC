@@ -1,8 +1,7 @@
 <?php
+namespace app\core\db;
 
-
-
-namespace app\core;
+use app\core\Application;
 
 
 
@@ -11,6 +10,8 @@ class Database
     public \PDO $pdo;
     /**
      * Database constructor
+     * Veritabanı bağlantısı için kullanılır .
+     * @param array $config bu array $config['db'] olarak gelir içerisinden veritabanı bilgileri alınır.
      */
     public function __construct(array $config)
     {
@@ -22,7 +23,13 @@ class Database
         $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $this->pdo->query("SET NAMES UTF8");
     }
-
+/**
+ * Migration sınıflarını uygulayıp, veritabanının güncellenmesini sağlar.
+ * 
+ * Bu metot sayesinde uygulanmamış olan tüm migration dosyaları tek tek uygulanır .
+ *
+ * @return void
+ */
     public function applyMigration()
     {
 
@@ -58,7 +65,11 @@ class Database
             $this->log("Tüm migration'lar uygulanmış .");
         }
     }
-
+    /**
+     * Migration tablosunu oluşturur .
+     *
+     * @return void
+     */
     public function createMigrationsTable()
     {
         $this->pdo->exec("CREATE TABLE IF NOT EXISTS migrations (
@@ -68,6 +79,11 @@ class Database
             ) ENGINE=INNODB;");
     }
 
+    /**
+     * Uygulanan migration'ları döndürür .
+     *
+     * @return array
+     */
     public function getAppliedMigrations()
     {
 
@@ -76,7 +92,13 @@ class Database
 
         return $statment->fetchAll(\PDO::FETCH_COLUMN);
     }
-
+    /**
+     * Migration'ları veritabanına  kaydeder .
+     *
+     * Metodun amacı : migration'ları tekrar tekrar çalıştırmaktan kurtarır .
+     * @param array $migrations
+     * @return void
+     */
     public function saveMigrations(array $migrations)
     {
         $migrationsStr =  implode(',', array_map(fn ($m) => "('$m')", $migrations));
@@ -90,7 +112,12 @@ class Database
     {
         return $this->pdo->prepare($sql);
     }
-    
+    /**
+     * Migrationlar veya farklı bir uygulama yapılırken console'ye log yazdırır .
+     *
+     * @param [string] $message
+     * @return void
+     */
     protected  function log($message)
     {
         echo '[' . date("Y-m-d H:i:s") . '] - ' . $message . PHP_EOL;

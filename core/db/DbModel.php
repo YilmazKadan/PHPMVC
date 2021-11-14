@@ -1,6 +1,8 @@
 <?php
 
-namespace app\core;
+namespace app\core\db;
+use app\core\Model;
+use app\core\Application;
 
 abstract class DbModel extends Model
 {
@@ -12,18 +14,18 @@ abstract class DbModel extends Model
      */
     abstract public static function tableName(): string;
     /**
+     * Abstract metot sınıfın primary key sütununu döndürür.
+     *
+     * @return string
+     */
+    abstract public static function primaryKey (): string;
+    /**
      * Abstract metot sınıfın tablo sütunlarını döndürür.
      *
      * @return array
      */
     abstract public function attributes(): array;
 
-    /**
-     * Abstract metot sınıfın primary key sütununu döndürür.
-     *
-     * @return string
-     */
-    abstract public static function primaryKey (): string;
 /**
  * Veritabanına kayıt metodu
  * 

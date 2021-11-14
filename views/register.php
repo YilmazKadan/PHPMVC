@@ -3,6 +3,11 @@
 /**
  * @var $model \app\models\User
  */
+/**
+ * @var  app\core\View $this
+ */
+$this->title = 'register';
+$this->keywords = 'kayıt, kayıt sayfası';
 ?>
 
 

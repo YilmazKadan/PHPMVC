@@ -2,7 +2,7 @@
 
 namespace app\core;
 
-use app\models\User;
+use app\core\db\Database;
 
 /**
  * Apllication sınıfı 
@@ -39,7 +39,7 @@ class Application
      * Database sınıfından bir nesne tutar
      *
      * @var Database $db Database sınıfından bir nesne
-     */ 
+     */
     public Database $db;
     /**
      * Session sınıfından bir nesne tutar
@@ -57,14 +57,16 @@ class Application
      * @var Controller $controller aktif olarak çalışılan controller nesnesini tutar .
      */
     public Controller $controller;
+
+    public View $view;
     // '?' property'nin türünün boş olabileceğini belirliyor 
 
     /**
      * DbModel sınıfından miras alan bir user nesnesi tutar.
      *
-     * @var DbModel|null $user aktif olarak oturum açan kullanıcının bilgilerini tutar.
+     * @var UserModel|null $user aktif olarak oturum açan kullanıcının bilgilerini tutar.
      */
-    public ?DbModel $user;
+    public ?UserModel $user;
     /**
      * Undocumented variable
      *
@@ -84,18 +86,18 @@ class Application
      */
     public function __construct($rootPath, array $config)
     {
+        $this->session = new Session();
+        $primaryValue = $this->session->get('user');
         $this->userClass = $config['userClass'];
         self::$ROOT_DIR = $rootPath;
         self::$app = $this;
         $this->request = new Request();
         $this->response = new Response();
         $this->controller = new Controller();
-        $this->session = new Session();
         $this->router = new Router($this->request, $this->response);
-
+        $this->view = new View();
         $this->db = new Database($config['db']);
 
-        $primaryValue = $this->session->get('user');
 
         if ($primaryValue) {
             $primaryKey = $this->userClass::primaryKey();
@@ -116,8 +118,12 @@ class Application
         try {
             echo $this->router->resolve();
         } catch (\Exception $e) {
-            $this->response->setStatusCode($e->getCode());
-            echo $this->router->renderView('_error',[
+            // Hata response hatası ise bu metot çalışır.
+            if (get_parent_class($e) == "Exception") {
+
+                $this->response->setStatusCode($e->getCode());
+            }
+            echo $this->view->renderView('_error', [
                 "exception" =>  $e
             ]);
         }
@@ -131,7 +137,7 @@ class Application
      * @param DbModel $user bu parametre kullanıcının nesnesini tutar.
      * @return bool true dönerse başarılı bir şekilde giriş yapıldı.
      */
-    public function login(DbModel $user)
+    public function login(UserModel $user)
     {
         $this->user = $user;
         $primaryKey = $user->primaryKey();

@@ -68,7 +68,7 @@ class Router
          * $callback string ise direkt view'e gönderir.
          */
         if (is_string($callback)) {
-            return $this->renderView($callback);
+            return Application::$app->view->renderView($callback);
         }
         if(is_array($callback)){
             /**
@@ -90,52 +90,5 @@ class Router
         }
 
         return call_user_func($callback,$this->request, $this->response);
-    }
-    /**
-     * View'i render eder.
-     *
-     * layoutConent ile gelen çıktı ve renderOnlyView ile gelen çıktıları {{content}} içerisine yerleştirir.
-     * @param [string] $view view ismi
-     * @return string view'i render edilen html stringi döner.
-     */
-    public function renderView($view , $params = [])
-    {
-        $layoutContent = $this->layoutContent();
-        $viewContent = $this->renderOnlyView($view, $params);
-        return str_replace('{{content}}', $viewContent, $layoutContent);
-    }
-    /**
-     * layoutContent metotu
-     * 
-     * Bu metot controller'da belirtilen layout dosyasının içeriğinin ob_start() ile çıktıyı alır.
-     * Ve sonrasında ob_get_clean() ile çıktıyı döndürür.
-     *
-     * @return string ob_get_clean() ile döndürülen layout dosyasının içeriği çıktı olarak döner .
-     */
-    protected function layoutContent()
-    {   $layout = Application::$app->controller->layout;
-        ob_start();
-        include_once Application::$ROOT_DIR . "/views/layouts/$layout.php";
-        return ob_get_clean();
-    }
-
-    /**
-     * renderOnlyView metotu
-     * 
-     * Bu metot controller'da belirtilen view dosyasının içeriğinin ob_start() ile çıktıyı alır. Ama 
-     * ob_get_clean() ile çıktıyı döndürmez. Layout sayfasının içerisine yerleştirleceği için değer döndürülmez.
-     *
-     * @param [string] $view view ismi
-     * @param [string] $params view sayfasında kullanılacak parametreleri tutar.
-     * @return string view'i render edilen html stringi döner.
-     */
-    protected function renderOnlyView($view,$params)
-    {
-        foreach ($params as $key => $value){
-            $$key = $value;
-        }
-        ob_start();
-        include_once Application::$ROOT_DIR . "/views/$view.php";
-        return ob_get_clean();
     }
 }

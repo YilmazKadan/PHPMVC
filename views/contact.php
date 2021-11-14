@@ -1,19 +1,19 @@
 <?php
+
+use app\core\form\Form;
+use app\core\form\TextAreaField;
+
+/**
+ * @var \app\core\Model $model
+ */
+$this->title = "İletişim Formu";
 ?>
 
-    <form action="#" method="post">
-        <div class="form-group mb-3">
-            <label>Konu</label>
-            <input type="text" name="konu" class="form-control">
-        </div>
-        <div class="form-group mb-3">
-            <label>Email</label>
-            <input type="text" name="email" class="form-control">
-        </div>
-        <div class="form-group mb-3">
-            <label>Mesaj</label>
-            <textarea name="mesaj" name="email" class="form-control"></textarea>
-        </div>
+<h1>İletişim</h1>
 
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+<?php $form = \app\core\form\Form::begin('', 'post'); ?>
+<?php echo $form->field($model, 'subject');  ?>
+<?php echo $form->field($model, 'email');  ?>
+<?php echo new TextAreaField($model, 'body');  ?>
+<button type="submit" class="btn btn-primary">Submit</button>
+<?php Form::end(); ?>

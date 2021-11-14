@@ -26,7 +26,9 @@ abstract class Model
         foreach ($data as $key => $value) {
             // Gelen değerleri burada property'lere akatarıyoruz.
             if (property_exists($this, $key)) {
-                $this->{$key} = $value;
+                $breaks = array("\r\n", "\n", "\r");
+                $value = str_replace($breaks, "", $value);
+                $this->{$key} = trim(preg_replace('/(\r|\n)/', '', $value));
             }
         }
     }
